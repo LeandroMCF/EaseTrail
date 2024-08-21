@@ -1,6 +1,6 @@
 ﻿using EaseTrail.WebApp.Inputs;
 using EaseTrail.WebApp.Interfaces;
-using EaseTrail.WebApp.Model;
+using EaseTrail.WebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +12,10 @@ namespace EaseTrail.WebApp.Controllers
     public class UserController : Controller
     {
         private readonly IUserContext _userContext;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserController(IUserContext userContext, IHttpContextAccessor httpContextAccessor)
         {
             _userContext = userContext;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         #region[HttpGet]

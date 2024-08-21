@@ -1,4 +1,4 @@
-﻿namespace EaseTrail.WebApp.Model.Generic
+﻿namespace EaseTrail.WebApp.Models.Generic
 {
     public class AllClasses
     {

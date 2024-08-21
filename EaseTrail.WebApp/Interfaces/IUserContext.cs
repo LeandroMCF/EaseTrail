@@ -1,5 +1,5 @@
 ﻿using EaseTrail.WebApp.Inputs;
-using EaseTrail.WebApp.Model;
+using EaseTrail.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EaseTrail.WebApp.Interfaces

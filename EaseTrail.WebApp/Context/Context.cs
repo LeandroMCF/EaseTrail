@@ -1,4 +1,4 @@
-﻿using EaseTrail.WebApp.Model;
+﻿using EaseTrail.WebApp.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EaseTrail.WebApp.Services
@@ -13,6 +13,7 @@ namespace EaseTrail.WebApp.Services
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<WorkSpace> WorkSpaces { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -26,6 +27,8 @@ namespace EaseTrail.WebApp.Services
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            #region User
 
             modelBuilder.Entity<User>()
                 .HasKey(p => p.Id);
@@ -59,6 +62,40 @@ namespace EaseTrail.WebApp.Services
             modelBuilder.Entity<User>()
                 .Property(u => u.UserType)
                 .IsRequired();
+
+            #endregion
+
+            #region WorkSpace
+
+            modelBuilder.Entity<WorkSpace>()
+                .HasKey(p => p.Id);
+
+            modelBuilder.Entity<WorkSpace>()
+                .HasOne(x => x.Owner)
+                .WithMany(x => x.WorkSpaces)
+                .HasForeignKey(x => x.OwnerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<WorkSpace>()
+                .Property(u => u.Name)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            modelBuilder.Entity<WorkSpace>()
+                .Property(u => u.Description)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            modelBuilder.Entity<WorkSpace>()
+                .Property(u => u.Color)
+                .HasMaxLength(25)
+                .IsRequired();
+
+            modelBuilder.Entity<WorkSpace>()
+                .Property(u => u.Status)
+                .IsRequired();
+
+            #endregion
         }
     }
 }

@@ -4,6 +4,7 @@ using EaseTrail.WebApp.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EaseTrail.WebApp.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240820235749_init-workspace")]
+    partial class initworkspace
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,7 +116,7 @@ namespace EaseTrail.WebApp.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("WorkSpaces");
+                    b.ToTable("WorkSpace");
                 });
 
             modelBuilder.Entity("EaseTrail.WebApp.Models.WorkSpace", b =>

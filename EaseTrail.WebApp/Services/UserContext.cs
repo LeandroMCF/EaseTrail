@@ -1,8 +1,8 @@
 ﻿#pragma warning disable CA2200 // Rethrow to preserve stack details
 using EaseTrail.WebApp.Inputs;
 using EaseTrail.WebApp.Interfaces;
-using EaseTrail.WebApp.Model;
-using EaseTrail.WebApp.Model.Enums;
+using EaseTrail.WebApp.Models;
+using EaseTrail.WebApp.Models.Enums;
 using EaseTrail.WebApp.Outputs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,14 +17,19 @@ namespace EaseTrail.WebApp.Services
     {
         private readonly Context _context;
         private readonly SymmetricSecurityKey _signingKey;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserContext(Context context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        private readonly IUtilsContext _utilsContext;
+
+        public UserContext(
+            Context context 
+            ,IConfiguration configuration
+            ,IUtilsContext utilsContext
+        )
         {
             var secretKey = configuration["JwtSettings:SecretKey"];
             _signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
+            _utilsContext = utilsContext;
         }
 
         public async Task<IActionResult> CreateUser(CreateUser input)
@@ -112,7 +117,38 @@ namespace EaseTrail.WebApp.Services
         {
             try
             {
-                var user = await _context.Users.FindAsync(new Guid(id));
+                /*
+                 * Utilizar DTOs:
+                public class UserDto
+                {
+                    public Guid Id { get; set; }
+                    public string UserName { get; set; }
+                    public List<WorkSpaceDto> WorkSpaces { get; set; }
+                }
+
+                public class WorkSpaceDto
+                {
+                    public string Name { get; set; }
+                    public string Description { get; set; }
+                }
+
+                var userDto = new UserDto
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    WorkSpaces = user.WorkSpaces.Select(ws => new WorkSpaceDto
+                    {
+                        Name = ws.Name,
+                        Description = ws.Description
+                    }).ToList()
+                };
+
+                Dessa forma é possivel manipular os dados sem ciclos infinitos
+
+                PS: Criar na pasta output
+                */
+
+                var user = await _context.Users.Include(x => x.WorkSpaces).FirstOrDefaultAsync(x => x.Id == new Guid(id));
 
                 if (user == null)
                 {
@@ -311,29 +347,13 @@ namespace EaseTrail.WebApp.Services
             return tokenHandler.WriteToken(token);
         }
 
-        private bool ViewToken(User userToDelete)
+        private bool ViewToken(User otherUser)
         {
-            var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
-
-            token = token.Replace("Bearer ", "");
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var validationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = _signingKey,
-                ValidateIssuer = false,
-                ValidateAudience = false
-            };
-
             try
             {
-                var claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out _);
+                var tonkenCredInfo = _utilsContext.GetUserInfo();
 
-                TonkenCredInfo tonkenCredInfo = new TonkenCredInfo(claimsPrincipal.FindFirst("id")?.Value, Convert.ToInt32(claimsPrincipal.FindFirst(ClaimTypes.Role)?.Value));
-
-                if (tonkenCredInfo.Id == userToDelete.Id.ToString())
+                if (tonkenCredInfo.Id == otherUser.Id.ToString())
                 {
                     return true;
                 }
@@ -341,7 +361,7 @@ namespace EaseTrail.WebApp.Services
                 {
                     return true;
                 }
-                else if (tonkenCredInfo.UserType == 2 && (int)userToDelete.UserType == 3)
+                else if (tonkenCredInfo.UserType == 2 && (int)otherUser.UserType == 3)
                 {
                     return true;
                 }

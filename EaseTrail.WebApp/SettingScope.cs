@@ -7,8 +7,13 @@ namespace EaseTrail.WebApp
     {
         public static IServiceCollection AddProjectServices(this IServiceCollection services)
         {
-            services.AddScoped<IUserContext, UserContext>();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddScoped<IUtilsContext, UtilsContext>();
+
+            services.AddScoped<IUserContext, UserContext>();
+            services.AddScoped<IWorkSpaceContext, WorkSpaceContext>();
 
             return services;
         }

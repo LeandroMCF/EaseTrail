@@ -1,9 +1,7 @@
-﻿using EaseTrail.WebApp.Inputs;
-using EaseTrail.WebApp.Model.Enums;
-using EaseTrail.WebApp.Model.Generic;
-using System.Reflection.Metadata;
+﻿using EaseTrail.WebApp.Models.Enums;
+using EaseTrail.WebApp.Models.Generic;
 
-namespace EaseTrail.WebApp.Model
+namespace EaseTrail.WebApp.Models
 {
     public class User : AllClasses
     {
@@ -44,5 +42,7 @@ namespace EaseTrail.WebApp.Model
         public string DocumentId { get; set; }
         public Status Status { get; set; }
         public UserType UserType { get; set; }
+
+        public ICollection<WorkSpace> WorkSpaces { get; set; }
     }
 }

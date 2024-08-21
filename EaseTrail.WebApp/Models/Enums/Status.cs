@@ -1,4 +1,4 @@
-﻿namespace EaseTrail.WebApp.Model.Enums
+﻿namespace EaseTrail.WebApp.Models.Enums
 {
     public enum Status
     {
