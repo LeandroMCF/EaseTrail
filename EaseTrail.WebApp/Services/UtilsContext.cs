@@ -24,7 +24,7 @@ namespace EaseTrail.WebApp.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public TonkenCredInfo GetUserInfo()
+        public TonkenCredInfoDto GetUserInfo()
         {
             var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
 
@@ -44,7 +44,7 @@ namespace EaseTrail.WebApp.Services
             {
                 var claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out _);
 
-                TonkenCredInfo tonkenCredInfo = new TonkenCredInfo(claimsPrincipal.FindFirst("id")?.Value, Convert.ToInt32(claimsPrincipal.FindFirst(ClaimTypes.Role)?.Value));
+                TonkenCredInfoDto tonkenCredInfo = new TonkenCredInfoDto(claimsPrincipal.FindFirst("id")?.Value, Convert.ToInt32(claimsPrincipal.FindFirst(ClaimTypes.Role)?.Value));
 
                 return tonkenCredInfo;
             }

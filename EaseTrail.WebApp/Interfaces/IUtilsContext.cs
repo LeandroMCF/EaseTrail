@@ -4,6 +4,6 @@ namespace EaseTrail.WebApp.Interfaces
 {
     public interface IUtilsContext
     {
-        public TonkenCredInfo GetUserInfo();
+        public TonkenCredInfoDto GetUserInfo();
     }
 }

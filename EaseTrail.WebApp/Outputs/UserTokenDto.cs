@@ -1,6 +1,6 @@
 ﻿namespace EaseTrail.WebApp.Outputs
 {
-    public class UserToken
+    public class UserTokenDto
     {
         public string Token { get; set; }
     }

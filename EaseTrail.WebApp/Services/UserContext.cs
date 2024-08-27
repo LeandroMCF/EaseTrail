@@ -117,45 +117,14 @@ namespace EaseTrail.WebApp.Services
         {
             try
             {
-                /*
-                 * Utilizar DTOs:
-                public class UserDto
-                {
-                    public Guid Id { get; set; }
-                    public string UserName { get; set; }
-                    public List<WorkSpaceDto> WorkSpaces { get; set; }
-                }
-
-                public class WorkSpaceDto
-                {
-                    public string Name { get; set; }
-                    public string Description { get; set; }
-                }
-
-                var userDto = new UserDto
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    WorkSpaces = user.WorkSpaces.Select(ws => new WorkSpaceDto
-                    {
-                        Name = ws.Name,
-                        Description = ws.Description
-                    }).ToList()
-                };
-
-                Dessa forma é possivel manipular os dados sem ciclos infinitos
-
-                PS: Criar na pasta output
-                */
-
-                var user = await _context.Users.Include(x => x.WorkSpaces).FirstOrDefaultAsync(x => x.Id == new Guid(id));
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == new Guid(id));
 
                 if (user == null)
                 {
                     throw new Exception("Usuário não encontrado.");
                 }
                 else 
-                { 
+                {
                     return user; 
                 }
             }
@@ -201,7 +170,7 @@ namespace EaseTrail.WebApp.Services
                     }
                 }
 
-                UserToken token = new UserToken();
+                UserTokenDto token = new UserTokenDto();
 
                 token.Token = GenerateToken(user);
 

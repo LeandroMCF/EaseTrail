@@ -3,9 +3,9 @@
 namespace EaseTrail.WebApp.Outputs
 {
     [NotMapped]
-    public class TonkenCredInfo
+    public class TonkenCredInfoDto
     {
-        public TonkenCredInfo(string id, int userType)
+        public TonkenCredInfoDto(string id, int userType)
         {
             Id = id;
             UserType = userType;
