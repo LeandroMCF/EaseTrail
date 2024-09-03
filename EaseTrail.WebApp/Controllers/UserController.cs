@@ -21,7 +21,7 @@ namespace EaseTrail.WebApp.Controllers
         #region[HttpGet]
 
         [HttpGet("get")]
-        [Authorize]
+        [Authorize(Policy = "Restrict")]
         public async Task<IActionResult> getAll() 
         {
             try

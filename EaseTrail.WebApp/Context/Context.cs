@@ -14,6 +14,7 @@ namespace EaseTrail.WebApp.Services
 
         public DbSet<User> Users { get; set; }
         public DbSet<WorkSpace> WorkSpaces { get; set; }
+        public DbSet<UsersWorkSpace> UsersWorkSpaces { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -74,7 +75,7 @@ namespace EaseTrail.WebApp.Services
                 .HasOne(x => x.Owner)
                 .WithMany(x => x.WorkSpaces)
                 .HasForeignKey(x => x.OwnerId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<WorkSpace>()
                 .Property(u => u.Name)
@@ -93,6 +94,33 @@ namespace EaseTrail.WebApp.Services
 
             modelBuilder.Entity<WorkSpace>()
                 .Property(u => u.Status)
+                .IsRequired();
+
+            #endregion
+
+            #region UserWorkSpace
+
+            modelBuilder.Entity<UsersWorkSpace>()
+                .HasKey(p => p.Id);
+
+            modelBuilder.Entity<UsersWorkSpace>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.UsersWorkSpaces)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UsersWorkSpace>()
+                .HasOne(x => x.WorkSpace)
+                .WithMany(x => x.UsersWorkSpaces)
+                .HasForeignKey(x => x.WorkSpaceId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UsersWorkSpace>()
+                .Property(u => u.ColaboratorType)
+                .IsRequired();
+
+            modelBuilder.Entity<UsersWorkSpace>()
+                .Property(u => u.InviteStatus)
                 .IsRequired();
 
             #endregion

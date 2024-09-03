@@ -2,9 +2,9 @@
 {
     public enum Status
     {
-        Active = 0,
-        Inactive = 1,
-        OnHold = 2,
-        Baned = 3,
+        Active = 1,
+        Inactive = 2,
+        OnHold = 3,
+        Baned = 4,
     }
 }

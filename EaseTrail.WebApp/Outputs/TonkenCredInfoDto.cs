@@ -5,6 +5,10 @@ namespace EaseTrail.WebApp.Outputs
     [NotMapped]
     public class TonkenCredInfoDto
     {
+        public TonkenCredInfoDto()
+        {
+        }
+
         public TonkenCredInfoDto(string id, int userType)
         {
             Id = id;

@@ -2,10 +2,11 @@
 {
     public enum UserType
     {
-        IT = 0,
-        PlataformAdmin = 1,
-        CompanyAdmin = 2,
-        CompanyAffiliate = 3,
-        Developer = 4,
+        IT = 1,
+        PlataformAdmin = 2,
+        CompanyAdmin = 3,
+        CompanyAffiliate = 4,
+        Developer = 5,
+        AdminAffiliate = 6,
     }
 }

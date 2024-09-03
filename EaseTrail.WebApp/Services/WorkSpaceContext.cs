@@ -2,6 +2,7 @@
 using EaseTrail.WebApp.Interfaces;
 using EaseTrail.WebApp.Models;
 using EaseTrail.WebApp.Models.Enums;
+using EaseTrail.WebApp.Outputs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -50,11 +51,25 @@ namespace EaseTrail.WebApp.Services
             }
         }
 
-        public async Task<List<WorkSpace>> GetByUserId()
+        public async Task<List<WorkSpace>> GetByUserId(string id = "")
         {
-            var user = _utilsContext.GetUserInfo();
+            string getId = "";
 
-            var workSpaces = await _context.WorkSpaces.Where(x => x.OwnerId == new Guid(user.Id)).ToListAsync();
+            if (string.IsNullOrEmpty(id))
+            {
+                getId = _utilsContext.GetUserInfo().Id;
+            }
+            else
+            {
+                getId = id;
+            }
+
+            var workSpaces = await _context.WorkSpaces.Where(x => x.OwnerId == new Guid(getId)).ToListAsync();
+
+            if (workSpaces == null)
+            {
+                throw new Exception("Não foi possivel encontrar nenhum workspace");
+            }
 
             return workSpaces;
         }
@@ -84,7 +99,7 @@ namespace EaseTrail.WebApp.Services
             }
         }
 
-        public async Task<IActionResult> UpdateWorkSpace(CreateWorkSpace input, Guid workSpaceId)
+        public async Task<IActionResult> UpdateWorkSpace(UpdateWorkSpace input, Guid workSpaceId)
         {
             try
             {
@@ -92,12 +107,21 @@ namespace EaseTrail.WebApp.Services
 
                 var workSpace = await _context.WorkSpaces.FirstOrDefaultAsync(x => x.OwnerId == new Guid(user.Id) && x.Id == workSpaceId);
 
+                if (workSpace == null)
+                {
+                    throw new Exception("Workspace não encontrado");
+                }
+
                 UpdateWorkSpace(workSpace, input);
+
+                await _context.SaveChangesAsync();
+
+                return new CreatedResult();
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
         }
 
@@ -129,16 +153,19 @@ namespace EaseTrail.WebApp.Services
 
         #region private methods
 
-        private void UpdateWorkSpace(WorkSpace workSpace, CreateWorkSpace input)
+        private void UpdateWorkSpace(WorkSpace workSpace, UpdateWorkSpace input)
         {
-            if (!string.IsNullOrEmpty(input.Name))
+            if (!string.IsNullOrEmpty(input.Name) && input.Name != workSpace.Name)
                 workSpace.Name = input.Name;
 
-            if (!string.IsNullOrEmpty(input.Description))
+            if (!string.IsNullOrEmpty(input.Description) && input.Description != workSpace.Description)
                 workSpace.Description = input.Description;
 
-            if (!string.IsNullOrEmpty(input.Color))
+            if (!string.IsNullOrEmpty(input.Color) && input.Color != workSpace.Color)
                 workSpace.Color = input.Color;
+
+            if (input.Status > 0 && (WorkSpaceStatus)input.Status != workSpace.Status)
+                workSpace.Status = (WorkSpaceStatus)input.Status;
         }
 
         #endregion

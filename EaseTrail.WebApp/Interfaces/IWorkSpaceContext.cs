@@ -7,10 +7,10 @@ namespace EaseTrail.WebApp.Interfaces
     public interface IWorkSpaceContext
     {
         public Task<List<WorkSpace>> GetAll();
-        public Task<List<WorkSpace>> GetByUserId();
+        public Task<List<WorkSpace>> GetByUserId(string id = "");
         public Task<WorkSpace> GetById(Guid workSpaceId);
         public Task<IActionResult> CreateWorkSpace(CreateWorkSpace input);
-        public Task<IActionResult> UpdateWorkSpace(CreateWorkSpace input, Guid workSpaceId);
+        public Task<IActionResult> UpdateWorkSpace(UpdateWorkSpace input, Guid workSpaceId);
         public Task<IActionResult> DeleteWorkSpace(Guid workSpaceId);
     }
 }

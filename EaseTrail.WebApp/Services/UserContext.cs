@@ -270,28 +270,28 @@ namespace EaseTrail.WebApp.Services
 
         private void UpdateUser(User user, UpdateUser input)
         {
-            if (!string.IsNullOrEmpty(input.UserName))
+            if (!string.IsNullOrEmpty(input.UserName) && input.UserName != user.UserName)
                 user.UserName = input.UserName;
 
-            if (!string.IsNullOrEmpty(input.Name))
+            if (!string.IsNullOrEmpty(input.Name) && input.Name != user.Name)
                 user.Name = input.Name;
 
-            if (!string.IsNullOrEmpty(input.SecondName))
+            if (!string.IsNullOrEmpty(input.SecondName) && input.SecondName != user.SecondName)
                 user.SecondName = input.SecondName;
 
-            if (!string.IsNullOrEmpty(input.Email))
+            if (!string.IsNullOrEmpty(input.Email) && input.Email != user.Email)
                 user.Email = input.Email;
 
-            if (!string.IsNullOrEmpty(input.Password))
+            if (!string.IsNullOrEmpty(input.Password) && input.Password != user.Password)
                 user.Password = input.Password;
 
-            if (input.DocumentId != default)
+            if (!string.IsNullOrEmpty(input.DocumentId) && input.DocumentId != user.DocumentId)
                 user.DocumentId = input.DocumentId;
 
-            if (input.Status != default)
+            if (input.Status > 0 && (Status)input.Status != user.Status)
                 user.Status = (Status)input.Status;
 
-            if (input.UserType != default)
+            if (input.UserType > 0 && (UserType)input.UserType != user.UserType)
                 user.UserType = (UserType)input.UserType;
         }
 
