@@ -44,6 +44,5 @@ namespace EaseTrail.WebApp.Models
         public UserType UserType { get; set; }
 
         public ICollection<WorkSpace> WorkSpaces { get; set; }
-        public ICollection<UsersWorkSpace> UsersWorkSpaces { get; set; }
     }
 }

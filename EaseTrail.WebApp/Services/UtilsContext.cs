@@ -61,7 +61,7 @@ namespace EaseTrail.WebApp.Services
 
         //Os métodos a baixo devem ser implementados na controller.
 
-        public async Task<IActionResult> InviteUser(Guid userId, Guid workSpaceId, int colabType)
+        public async Task<IActionResult> InviteUser(Guid userId, string addUserEmail, Guid workSpaceId, int colabType)
         {
             try
             {
@@ -74,12 +74,13 @@ namespace EaseTrail.WebApp.Services
                     throw new Exception("WorkSpace não encontrado");
                 }
 
-                if(await _context.Users.FirstOrDefaultAsync(x => x.Id == userId) == null)
+                if(await _context.Users.FirstOrDefaultAsync(x => x.Email == addUserEmail) == null)
                 {
+                    //Aplicar fluxo do tem user
                     throw new Exception("Usuário não encontrado");
                 }
 
-                UsersWorkSpace userWorker = new UsersWorkSpace(userId, workSpaceId, (ColaboratorType)colabType);
+                UsersWorkSpace userWorker = new UsersWorkSpace(addUserEmail, workSpaceId, (ColaboratorType)colabType);
 
                 await _context.UsersWorkSpaces.AddAsync(userWorker);
 
@@ -96,7 +97,7 @@ namespace EaseTrail.WebApp.Services
             }
         }
 
-        public async Task<IActionResult> RemoveUser(Guid userId, Guid workSpaceId)
+        public async Task<IActionResult> RemoveUser(Guid userId, Guid workSpaceId, Guid userWorkspaceItemId)
         {
             try
             {
@@ -109,12 +110,13 @@ namespace EaseTrail.WebApp.Services
                     throw new Exception("WorkSpace não encontrado");
                 }
 
-                if (await _context.Users.FirstOrDefaultAsync(x => x.Id == userId) == null)
+                if (await _context.UsersWorkSpaces.FirstOrDefaultAsync(x => x.Id == userWorkspaceItemId) == null)
                 {
-                    throw new Exception("Usuário não encontrado");
+                    //Aplicar fluxo do tem user
+                    throw new Exception("Conexão não encontrada");
                 }
 
-                var userWorker = await _context.UsersWorkSpaces.FirstOrDefaultAsync(x => x.UserId ==  userId && x.WorkSpaceId == workSpaceId);
+                var userWorker = await _context.UsersWorkSpaces.FirstOrDefaultAsync(x => x.Id == userWorkspaceItemId);
 
                 _context.UsersWorkSpaces.Remove(userWorker);
 
@@ -131,11 +133,11 @@ namespace EaseTrail.WebApp.Services
             }
         }
 
-        public async Task<IActionResult> AcceptInvite(Guid userId, Guid workSpaceId)
+        public async Task<IActionResult> AcceptInvite(string userEmail, Guid workSpaceId)
         {
             try
             {
-                var workSpace = await _context.UsersWorkSpaces.FirstOrDefaultAsync(x => x.UserId == userId && x.WorkSpaceId == workSpaceId);
+                var workSpace = await _context.UsersWorkSpaces.FirstOrDefaultAsync(x => x.UserEmail == userEmail && x.WorkSpaceId == workSpaceId);
 
                 workSpace.InviteStatus = InviteStatus.Accept;
 
@@ -150,11 +152,11 @@ namespace EaseTrail.WebApp.Services
             }
         }
 
-        public async Task<IActionResult> DeclineInvite(Guid userId, Guid workSpaceId)
+        public async Task<IActionResult> DeclineInvite(string userEmail, Guid workSpaceId)
         {
             try
             {
-                var workSpace = await _context.UsersWorkSpaces.FirstOrDefaultAsync(x => x.UserId == userId && x.WorkSpaceId == workSpaceId);
+                var workSpace = await _context.UsersWorkSpaces.FirstOrDefaultAsync(x => x.UserEmail == userEmail && x.WorkSpaceId == workSpaceId);
 
                 workSpace.InviteStatus = InviteStatus.Declined;
 
