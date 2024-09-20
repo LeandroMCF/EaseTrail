@@ -4,7 +4,6 @@
     {
         Active = 1,
         Inactive = 2,
-        OnHold = 3,
-        Baned = 4,
+        Baned = 3,
     }
 }

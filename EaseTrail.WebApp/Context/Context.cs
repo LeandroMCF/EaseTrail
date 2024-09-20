@@ -75,7 +75,7 @@ namespace EaseTrail.WebApp.Services
                 .HasOne(x => x.Owner)
                 .WithMany(x => x.WorkSpaces)
                 .HasForeignKey(x => x.OwnerId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<WorkSpace>()
                 .Property(u => u.Name)
@@ -110,16 +110,13 @@ namespace EaseTrail.WebApp.Services
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UsersWorkSpace>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.UsersWorkSpaces)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UsersWorkSpace>()
                 .Property(u => u.ColaboratorType)
-                .IsRequired();
-
-            modelBuilder.Entity<UsersWorkSpace>()
-                .Property(u => u.InviteStatus)
-                .IsRequired();
-
-            modelBuilder.Entity<UsersWorkSpace>()
-                .Property(u => u.UserEmail)
-                .HasMaxLength(50)
                 .IsRequired();
 
             #endregion

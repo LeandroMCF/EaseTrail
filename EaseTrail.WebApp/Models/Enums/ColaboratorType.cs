@@ -4,6 +4,6 @@
     {
         Basic = 1,
         Reader = 2,
-        Admin = 3,
+        Admin = 3
     }
 }
